@@ -40,11 +40,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $sql = "INSERT INTO `dish` (`title`,`description`,`price`,`category`)
 	 VALUES ('$title','$description','$price','$category')";
+
   // $query = "INSERT INTO `user` (`mail`, `password`) VALUES (:mail, :password)";
    // $values = [
    //   ':mail'=>$mail,
    //   ':password'=>$password
    // ];
+
    $request = $conn->prepare($sql);
    if($request->execute()) {
      echo "insert ok";
