@@ -5,12 +5,11 @@
   <title>Back end</title>
   <link href="main.css" type="text/css" rel="stylesheet">
 </head>
+
 <body>
   <h1>Add</h1>
 
-
   <form action="traitement.php" method="POST" enctype='multipart/form-data' name="add-form">
-
     <input name="title" placeholder="Title"></input>
     <input name="desc" placeholder="Description"></input>
     <input name="price" placeholder="Price"></input>
@@ -24,8 +23,6 @@
     </select>
     <button type="submit" name="save">OK</button>
   </form>
-
-
 
 </body>
 </html>

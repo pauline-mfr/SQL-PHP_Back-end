@@ -26,27 +26,25 @@ $request = $conn->prepare($sql);
 $request->execute();
 $request->closeCursor();
 
-// INSERT INTO
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+//INSERT INTO
+if (isset($_POST['save'])) {
   // collect value of input field
-  $title = $_REQUEST['title'];
+  $title = $_POST['title'];
   if (empty($title)) {echo "Title is empty";}
-  $description = $_REQUEST['desc'];
+  $description = $_POST['desc'];
   if (empty($description)) {echo "Description is empty";}
-  $price = $_REQUEST['price'];
+  $price = $_POST['price'];
   if (empty($price)) {echo "Price is empty";}
-  $category = $_REQUEST['cat'];
+  $category = $_POST['cat'];
   if (empty($category)) {echo "Category is missing";}
 
 $sql = "INSERT INTO `dish` (`title`,`description`,`price`,`category`)
 	 VALUES ('$title','$description','$price','$category')";
-
   // $query = "INSERT INTO `user` (`mail`, `password`) VALUES (:mail, :password)";
    // $values = [
    //   ':mail'=>$mail,
    //   ':password'=>$password
    // ];
-
    $request = $conn->prepare($sql);
    if($request->execute()) {
      echo "insert ok";
@@ -55,6 +53,26 @@ $sql = "INSERT INTO `dish` (`title`,`description`,`price`,`category`)
    }
    $request->closeCursor();
 } // END INSERT CONDITION
+
+// DELETE ENTRY
+if(isset($_POST['delete'])) {
+  echo '<script> alert ("You\'re about to delete this entry !")</script>';
+  $sql = "DELETE FROM `dish` WHERE `id` = :id";
+  $request = $conn->prepare($sql);
+  $array = [
+    ":id" => $_POST['delete']
+  ];
+  if($request->execute($array)) {
+    header("Refresh:0"); // reload la page
+    echo "delete complete";
+  }else{
+    echo "delete failed";
+  }
+  $request->closeCursor();
+}
+
+// UPDATE
+
 
 //UPLOAD
  // if (isset($_POST['img'])) {

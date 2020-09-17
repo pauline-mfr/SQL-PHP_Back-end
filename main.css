@@ -1,1 +1,5 @@
 body {background-color: AliceBlue;}
+
+/* #edit-options {display: none;}
+#edit-icon {cursor: pointer;}
+#edit-icon:hover + #edit-options{display: inline-block;} */
