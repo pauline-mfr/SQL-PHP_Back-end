@@ -26,6 +26,14 @@ $request = $conn->prepare($sql);
 $request->execute();
 $request->closeCursor();
 
+// AFFICHAGE
+$sql = "SELECT * FROM `dish`";
+$request = $conn->prepare($sql);
+$request->execute();
+$ids = $request->FetchAll();
+//$ids = contient les données
+$request->closeCursor();
+
 //INSERT INTO
 if (isset($_POST['save'])) {
   // collect value of input field
@@ -71,9 +79,43 @@ if(isset($_POST['delete'])) {
   $request->closeCursor();
 }
 
-// UPDATE
+// UPDATE FORM
+if(isset($_POST['edit'])) {
+  $id = $_POST['edit'];
+  var_dump($id);
+  echo '<h1>Edit</h1>
 
+  <form action="traitement.php" method="POST" enctype="multipart/form-data" name="edit-form">
+    <input name="new_title" value="' .$id. '"></input><br><br>
+    <input name="new_desc" value="description"></input><br><br>
+    <input name="new_price" value="Price"></input><br><br>
+    <!-- <label for="img">Pick an image</label>
+    <input type="file" name="img"></input> -->
+    <label for="cat">Categorie</label>
+    <select name="new_cat">
+      <option value="starter">Starter</option>
+      <option value="main-course">Main Course</option>
+      <option value="dessert">Dessert</option>
+    </select><br><br>
+    <button type="submit" name="update">Update</button>
+  </form>';
 
+ // UPDATE QUERY
+ if(isset($_POST['update'])) {
+   $new_title = $_POST['new_title'];
+   $sql = "UPDATE `dish` SET `title` = '$new_title' WHERE `id` = :id";
+   $request = $conn->prepare($sql);
+   $array = [
+     ":id" => $id
+   ];
+   if($request->execute($array)) {
+     echo "update complete";
+   }else{
+     echo "update failed";
+   }
+   $request->closeCursor();
+ }
+}
 //UPLOAD
  // if (isset($_POST['img'])) {
  //   move_uploaded_file($_FILES['img']['tmp_name'], $cwd.DIRECTORY_SEPARATOR.$_FILES['img']['name']);

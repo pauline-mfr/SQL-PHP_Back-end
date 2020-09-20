@@ -1,14 +1,4 @@
 <?php include('traitement.php') ?>
-<?php
-// requête affichage
-$sql = "SELECT * FROM `dish`";
-$request = $conn->prepare($sql);
-$request->execute();
-$ids = $request->FetchAll();//Mode(PDO::FETCH_ASSOC);
-//$data = contient les données
-//var_dump($datas); //=tableau des données
-$request->closeCursor();
-?>
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -30,7 +20,7 @@ $request->closeCursor();
       <div class="card-body">
         <h5 class="card-title"><?= $id['title'] ?><img src="edit.png" style="width: 15px; height:15px;" id="edit-icon">
          <form method="POST" action="traitement.php" id="edit-options">
-       <button class="btn btn-outline-primary btn-sm" type="submit" name="edit">Edit</button>
+       <button class="btn btn-outline-primary btn-sm" type="submit" name="edit" value="<?= $id['id'] ?>">Edit</button>
        <button class="btn btn-outline-primary btn-sm ml-2" type="submit" name="delete" value="<?= $id['id'] ?>">Delete</button>
      </form></h5>
      <img src="..." class="card-img-top" alt="...">
