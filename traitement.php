@@ -83,12 +83,19 @@ if(isset($_POST['delete'])) {
 if(isset($_POST['edit'])) {
   $id = $_POST['edit'];
   var_dump($id);
-  echo '<h1>Edit</h1>
+  $sql = "SELECT * FROM `dish` WHERE `id` = $id ";
+  $request = $conn->prepare($sql);
+  $request->execute();
+  $toUpdate = $request->FetchAll();
+  //$toUpdate = contient les données
+  $request->closeCursor();
+  var_dump($toUpdate);
 
+  echo '<h1>Edit</h1>
   <form action="traitement.php" method="POST" enctype="multipart/form-data" name="edit-form">
-    <input name="new_title" value="' .$id. '"></input><br><br>
-    <input name="new_desc" value="description"></input><br><br>
-    <input name="new_price" value="Price"></input><br><br>
+    <input name="new_title" value="' .$toUpdate[0]['title']. '"></input><br><br>
+    <input name="new_desc" value="' .$toUpdate[0]['description']. '"></input><br><br>
+    <input name="new_price" value="' .$toUpdate[0]['price']. '"></input><br><br>
     <!-- <label for="img">Pick an image</label>
     <input type="file" name="img"></input> -->
     <label for="cat">Categorie</label>
@@ -97,16 +104,19 @@ if(isset($_POST['edit'])) {
       <option value="main-course">Main Course</option>
       <option value="dessert">Dessert</option>
     </select><br><br>
-    <button type="submit" name="update">Update</button>
+    <button type="submit" name="update" value=' .$id. '>Update</button>
   </form>';
-
+}
  // UPDATE QUERY
  if(isset($_POST['update'])) {
    $new_title = $_POST['new_title'];
-   $sql = "UPDATE `dish` SET `title` = '$new_title' WHERE `id` = :id";
+   $new_desc = $_POST['new_desc'];
+   $new_price = $_POST['new_price'];
+   $new_cat = $_POST['new_cat'];
+   $sql = "UPDATE `dish` SET `title` = '$new_title', `description` = '$new_desc', `price` = '$new_price', `category` = '$new_cat' WHERE `id` = :id";
    $request = $conn->prepare($sql);
    $array = [
-     ":id" => $id
+     ":id" => $_POST['update']
    ];
    if($request->execute($array)) {
      echo "update complete";
@@ -115,7 +125,7 @@ if(isset($_POST['edit'])) {
    }
    $request->closeCursor();
  }
-}
+
 //UPLOAD
  // if (isset($_POST['img'])) {
  //   move_uploaded_file($_FILES['img']['tmp_name'], $cwd.DIRECTORY_SEPARATOR.$_FILES['img']['name']);
