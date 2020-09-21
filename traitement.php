@@ -19,12 +19,13 @@ $sql= "CREATE TABLE IF NOT EXISTS `dish` (
    `title` VARCHAR(50) NOT NULL ,
    `description` VARCHAR(255) NOT NULL ,
    `price` DECIMAL NOT NULL ,
-   -- `image` VARCHAR(255) /*NOT NULL*/NULL DEFAULT NULL ,
+   `image` VARCHAR(255) NULL DEFAULT NULL ,
    `category` VARCHAR(255) NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM;
 )";
 $request = $conn->prepare($sql);
 $request->execute();
 $request->closeCursor();
+
 
 // AFFICHAGE
 $sql = "SELECT * FROM `dish`";
@@ -36,18 +37,26 @@ $request->closeCursor();
 
 //INSERT INTO
 if (isset($_POST['save'])) {
-  // collect value of input field
   $title = $_POST['title'];
   if (empty($title)) {echo "Title is empty";}
   $description = $_POST['desc'];
   if (empty($description)) {echo "Description is empty";}
   $price = $_POST['price'];
   if (empty($price)) {echo "Price is empty";}
+
+
+  //IMG UPLOAD
+  if(isset($_FILES['img'])){
+  $img_name = $_FILES['img']['name'];
+  $dir ='img/'.$img_name;
+  move_uploaded_file($_FILES['img']['tmp_name'], $dir);
+  }
+
   $category = $_POST['cat'];
   if (empty($category)) {echo "Category is missing";}
 
-$sql = "INSERT INTO `dish` (`title`,`description`,`price`,`category`)
-	 VALUES ('$title','$description','$price','$category')";
+$sql = "INSERT INTO `dish` (`title`,`description`,`price`, `image`, `category`)
+	 VALUES ('$title','$description','$price', '$img_name', '$category')";
   // $query = "INSERT INTO `user` (`mail`, `password`) VALUES (:mail, :password)";
    // $values = [
    //   ':mail'=>$mail,
@@ -55,7 +64,8 @@ $sql = "INSERT INTO `dish` (`title`,`description`,`price`,`category`)
    // ];
    $request = $conn->prepare($sql);
    if($request->execute()) {
-     echo "insert ok";
+     echo "insert ok"."<br>";
+     echo "<a href='index.php'>Back to main menu</a>";
    }else{
      echo "insert fail";
    }
@@ -71,8 +81,9 @@ if(isset($_POST['delete'])) {
     ":id" => $_POST['delete']
   ];
   if($request->execute($array)) {
-    header("Refresh:0"); // reload la page
-    echo "delete complete";
+    echo "delete complete"."<br>";
+    echo "<a href='index.php'>Back to main menu</a>";
+    //header("Refresh:0"); // reload la page
   }else{
     echo "delete failed";
   }
@@ -100,6 +111,7 @@ if(isset($_POST['edit'])) {
     <input type="file" name="img"></input> -->
     <label for="cat">Categorie</label>
     <select name="new_cat">
+      <option value="'.$toUpdate[0]['category'].'">'.$toUpdate[0]['category'].'</option>
       <option value="starter">Starter</option>
       <option value="main-course">Main Course</option>
       <option value="dessert">Dessert</option>
@@ -119,14 +131,10 @@ if(isset($_POST['edit'])) {
      ":id" => $_POST['update']
    ];
    if($request->execute($array)) {
-     echo "update complete";
+     echo "update complete"."<br><br>";
+     echo "<a href='index.php'>Back to main menu</a>";
    }else{
      echo "update failed";
    }
    $request->closeCursor();
  }
-
-//UPLOAD
- // if (isset($_POST['img'])) {
- //   move_uploaded_file($_FILES['img']['tmp_name'], $cwd.DIRECTORY_SEPARATOR.$_FILES['img']['name']);
- // }

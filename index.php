@@ -23,7 +23,7 @@
        <button class="btn btn-outline-primary btn-sm" type="submit" name="edit" value="<?= $id['id'] ?>">Edit</button>
        <button class="btn btn-outline-primary btn-sm ml-2" type="submit" name="delete" value="<?= $id['id'] ?>">Delete</button>
      </form></h5>
-     <img src="..." class="card-img-top" alt="...">
+     <img src="img/<?= $id['image'] ?>" class="card-img-top" alt="<?= $id['image'] ?>">
         <p class="card-text"><?= $id['description'] ?></p>
         <ul class="list-group list-group-flush">
         <li class="list-group-item"><strong>Price :</strong> <?= $id['price'] ?>€</li>
