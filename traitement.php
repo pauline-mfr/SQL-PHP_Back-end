@@ -44,7 +44,6 @@ if (isset($_POST['save'])) {
   $price = $_POST['price'];
   if (empty($price)) {echo "Price is empty";}
 
-
   //IMG UPLOAD
   if(isset($_FILES['img'])){
   $img_name = $_FILES['img']['name'];
@@ -93,22 +92,20 @@ if(isset($_POST['delete'])) {
 // UPDATE FORM
 if(isset($_POST['edit'])) {
   $id = $_POST['edit'];
-  var_dump($id);
   $sql = "SELECT * FROM `dish` WHERE `id` = $id ";
   $request = $conn->prepare($sql);
   $request->execute();
   $toUpdate = $request->FetchAll();
   //$toUpdate = contient les données
   $request->closeCursor();
-  var_dump($toUpdate);
 
   echo '<h1>Edit</h1>
   <form action="traitement.php" method="POST" enctype="multipart/form-data" name="edit-form">
     <input name="new_title" value="' .$toUpdate[0]['title']. '"></input><br><br>
     <input name="new_desc" value="' .$toUpdate[0]['description']. '"></input><br><br>
     <input name="new_price" value="' .$toUpdate[0]['price']. '"></input><br><br>
-    <!-- <label for="img">Pick an image</label>
-    <input type="file" name="img"></input> -->
+    <label for="new_img">Pick an image</label>
+    <input type="file" name="new_img" value="' .$toUpdate[0]['image']. '"></input>
     <label for="cat">Categorie</label>
     <select name="new_cat">
       <option value="'.$toUpdate[0]['category'].'">'.$toUpdate[0]['category'].'</option>
@@ -124,8 +121,14 @@ if(isset($_POST['edit'])) {
    $new_title = $_POST['new_title'];
    $new_desc = $_POST['new_desc'];
    $new_price = $_POST['new_price'];
+   //IMG UPLOAD
+   if(isset($_FILES['new_img'])){
+   $new_img_name = $_FILES['new_img']['name'];
+   $dir ='img/'.$new_img_name;
+   move_uploaded_file($_FILES['new_img']['tmp_name'], $dir);
+   }
    $new_cat = $_POST['new_cat'];
-   $sql = "UPDATE `dish` SET `title` = '$new_title', `description` = '$new_desc', `price` = '$new_price', `category` = '$new_cat' WHERE `id` = :id";
+   $sql = "UPDATE `dish` SET `title` = '$new_title', `description` = '$new_desc', `price` = '$new_price', `image` = '$new_img_name', `category` = '$new_cat' WHERE `id` = :id";
    $request = $conn->prepare($sql);
    $array = [
      ":id" => $_POST['update']
